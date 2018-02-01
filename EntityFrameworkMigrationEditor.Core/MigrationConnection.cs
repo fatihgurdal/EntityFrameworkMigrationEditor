@@ -23,6 +23,28 @@ namespace EntityFrameworkMigrationEditor.Core
         public MigrationConnection(string connectionString) : this(connectionString, "__MigrationHistory")
         {
         }
+        public bool TestConnection(out string resultError)
+        {
+            resultError = "";
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    var command = new SqlCommand($"SELECT COUNT(*) FROM {MigrationTableName}", connection);
+                    var reader = command.ExecuteReader();
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    connection.Close();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultError = ex.Message;
+                return false;
+            }
+        }
         public MigrationConnection(string connectionString, string migrationTableName)
         {
             this.ConnectionString = connectionString;

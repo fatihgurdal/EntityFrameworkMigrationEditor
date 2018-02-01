@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace EntityFrameworkMigrationEditor.Core
 {
-    internal static class Extensions
+    public static class Extensions
     {
         /// <summary>
         /// Converts a DataTable to a list with generic objects
@@ -45,7 +45,7 @@ namespace EntityFrameworkMigrationEditor.Core
 
             return list;
         }
-        public static XDocument Decompress(this byte[] bytes)
+        internal static XDocument Decompress(this byte[] bytes)
         {
             using (var memoryStream = new MemoryStream(bytes))
             {
@@ -55,7 +55,7 @@ namespace EntityFrameworkMigrationEditor.Core
                 }
             }
         }
-        public static byte[] Compress(this XDocument model)
+        internal static byte[] Compress(this XDocument model)
         {
             using (var outStream = new MemoryStream())
             {
@@ -67,10 +67,15 @@ namespace EntityFrameworkMigrationEditor.Core
                 return outStream.ToArray();
             }
         }
-        public static void SaveSettings(this List<Setting> settings,string path)
+        public static void SaveSettings(this List<Setting> settings, string path)
         {
-            CandyFramework.Common.Converter.XMLSerializer.XmlSerialize(settings, path);
+            var jsonString = CandyFramework.Common.Converter.JsonSerializer.JSONSerialize(settings);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            File.WriteAllText(path, jsonString);
         }
-        
+
     }
 }

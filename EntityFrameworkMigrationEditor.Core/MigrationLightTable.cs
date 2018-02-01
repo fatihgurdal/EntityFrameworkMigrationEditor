@@ -16,6 +16,10 @@ namespace EntityFrameworkMigrationEditor.Core
         {
 
         }
-       
+        public override string ToString()
+        {
+            return $"{MigrationId} & {ContextKey} & {ProductVersion}";
+        }
+
     }
 }

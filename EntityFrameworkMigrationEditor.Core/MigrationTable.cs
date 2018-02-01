@@ -17,6 +17,10 @@ namespace EntityFrameworkMigrationEditor.Core
                 var xml = Model.Decompress();
                 return xml;
             }
+            else
+            {
+                return null;
+            }
         }
     }
 }
