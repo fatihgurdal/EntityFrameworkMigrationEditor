@@ -1,6 +1,6 @@
 ﻿namespace EntityFrameworkMigrationEditor.WinForm
 {
-    partial class MailFrm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.

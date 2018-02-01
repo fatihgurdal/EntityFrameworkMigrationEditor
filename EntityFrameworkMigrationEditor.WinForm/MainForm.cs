@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace EntityFrameworkMigrationEditor.WinForm
 {
-    public partial class MailFrm : Form
+    public partial class MainForm : Form
     {
-        public MailFrm()
+        public MainForm()
         {
             InitializeComponent();
         }

@@ -16,7 +16,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MailFrm());
+            Application.Run(new MainForm());
         }
     }
 }
