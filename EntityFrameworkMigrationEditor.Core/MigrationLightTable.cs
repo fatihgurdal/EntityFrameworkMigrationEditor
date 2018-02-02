@@ -11,7 +11,7 @@ namespace EntityFrameworkMigrationEditor.Core
         public string MigrationId { get; set; }
         public string ContextKey { get; set; }
         public string ProductVersion { get; set; }
-       
+
         public MigrationLightTable()
         {
 
@@ -19,6 +19,11 @@ namespace EntityFrameworkMigrationEditor.Core
         public override string ToString()
         {
             return $"{MigrationId} & {ContextKey} & {ProductVersion}";
+        }
+        public MigrationTable GetMigrationTable(Setting setting)
+        {
+            var migCon = new MigrationConnection(setting.ConnectionString, setting.MigrationTableName);
+            return migCon.GetMigrationWithData(this.MigrationId, setting);
         }
 
     }

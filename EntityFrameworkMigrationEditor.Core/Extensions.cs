@@ -45,7 +45,7 @@ namespace EntityFrameworkMigrationEditor.Core
 
             return list;
         }
-        internal static XDocument Decompress(this byte[] bytes)
+        public static XDocument Decompress(this byte[] bytes)
         {
             using (var memoryStream = new MemoryStream(bytes))
             {
@@ -55,7 +55,7 @@ namespace EntityFrameworkMigrationEditor.Core
                 }
             }
         }
-        internal static byte[] Compress(this XDocument model)
+        public static byte[] Compress(this XDocument model)
         {
             using (var outStream = new MemoryStream())
             {

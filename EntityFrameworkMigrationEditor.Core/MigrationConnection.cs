@@ -123,7 +123,7 @@ namespace EntityFrameworkMigrationEditor.Core
                 }
                 if (string.IsNullOrEmpty(migrationId) == false)
                 {
-                    sqlToExecute += $"WHERE {setting.MigrationIdName}='{migrationId}'";
+                    sqlToExecute += $" WHERE {setting.MigrationIdName}='{migrationId}'";
                 }
                 connection.Open();
 

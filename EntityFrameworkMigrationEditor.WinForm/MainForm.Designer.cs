@@ -82,6 +82,7 @@
             this.lbMigrations.Name = "lbMigrations";
             this.lbMigrations.Size = new System.Drawing.Size(575, 342);
             this.lbMigrations.TabIndex = 5;
+            this.lbMigrations.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbMigrations_MouseDoubleClick);
             // 
             // MainForm
             // 

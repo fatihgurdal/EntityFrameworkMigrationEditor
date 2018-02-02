@@ -75,5 +75,19 @@ namespace EntityFrameworkMigrationEditor.WinForm
                 lbMigrations.DataSource = migration;
             }
         }
+
+        private void lbMigrations_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var selected = (MigrationLightTable)(((ListBox)sender).SelectedItem);
+            var setting = (Setting)(cbMigrations.SelectedItem);
+            if (selected != null && setting != null)
+            {
+                var form = new OpenMigrationXML(selected.GetMigrationTable(setting));
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    LoadSettings();
+                }
+            }
+        }
     }
 }
