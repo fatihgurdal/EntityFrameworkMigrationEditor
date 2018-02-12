@@ -37,11 +37,12 @@ namespace EntityFrameworkMigrationEditor.WinForm
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var form = new EditMigrationSetting(new Setting(true), false);
-
+            this.Hide();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadSettings();
             }
+            this.Show();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -54,6 +55,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
                 isUpdate = true;
             }
             var form = new EditMigrationSetting(set, isUpdate);
+            this.Hide();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 if (isUpdate)
@@ -63,6 +65,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
                 }
                 LoadSettings();
             }
+            this.Show();
         }
 
         private void btnGetMigrations_Click(object sender, EventArgs e)
@@ -82,11 +85,15 @@ namespace EntityFrameworkMigrationEditor.WinForm
             var setting = (Setting)(cbMigrations.SelectedItem);
             if (selected != null && setting != null)
             {
-                var form = new OpenMigrationXML(selected.GetMigrationTable(setting));
+                var form = new OpenMigrationXML(selected.GetMigrationTable(setting), setting);
+                this.Hide();
+                form.Text = selected.MigrationId;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     LoadSettings();
                 }
+                this.Show();
+
             }
         }
     }

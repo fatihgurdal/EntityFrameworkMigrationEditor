@@ -91,6 +91,28 @@ namespace EntityFrameworkMigrationEditor.Core
         {
             UpdateMigration(migrationId, xDocument, new MigrationSetting());
         }
+        public void UpdateMigration(MigrationLightTable migrationLightTable)
+        {
+            UpdateMigration(migrationLightTable, new MigrationSetting());
+        }
+        public void UpdateMigration(MigrationLightTable migrationLightTable, MigrationSetting setting)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=@contexKey , {setting.ProductVersionName}=@productName WHERE {setting.MigrationIdName}=@migrationId";
+
+                var command = new SqlCommand { Connection = connection, CommandType = CommandType.Text };
+                command.CommandText = sqlToExecute;
+
+
+                command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationLightTable.MigrationId;
+                command.Parameters.Add("@contexKey", SqlDbType.NVarChar).Value = migrationLightTable.ContextKey;
+                command.Parameters.Add("@productName", SqlDbType.NVarChar).Value = migrationLightTable.ProductVersion;
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
         public void UpdateMigration(string migrationId, XDocument xDocument, MigrationSetting setting)
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -101,7 +123,9 @@ namespace EntityFrameworkMigrationEditor.Core
                 var modelBytes = xDocument.Compress();
                 command.Parameters.Add("@data", SqlDbType.VarBinary, modelBytes.Length).Value = modelBytes;
                 command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationId;
+                connection.Open();
                 command.ExecuteNonQuery();
+                connection.Close();
             }
         }
         #endregion
