@@ -12,4 +12,8 @@ Migration Editor __MigrationHistory tablosundaki varbinary(MAX) tipindeki yani C
  - Gönderdiğimiz migration beklemediğimiz şekilde aksiyon almadığı durumlarda migration içerini görüntüleyebilmek
  - Projenin namespace adresi değiştiğinde beklenmedik migration hataları alındığında migration düzenleyebilmek.
 
+**ARAYÜZ VE ÖRNEK KULLANIM**
+![enter image description here](https://raw.githubusercontent.com/fatihgurdal/EntityFrameworkMigrationEditor/master/EntityFrameworkMigrationEditor.WinForm/img/preview.gif)
+
 ## ENGLISH
+
