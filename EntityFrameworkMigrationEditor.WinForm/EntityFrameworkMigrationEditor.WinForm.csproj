@@ -125,6 +125,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="img\preview.gif" />
     <Content Include="img\school-bell.ico" />
     <Content Include="img\school-bell.png" />
     <None Include="img\copy.png" />
