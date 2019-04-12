@@ -1,4 +1,17 @@
-Türkçe ve İngilizce
+
+## ENGLISH
+
+This windows form application is a tool for managing database and migrations for Entityframework. Migrations manages database changes. This changes are logged in __MigrationHistory table in varbinary(max) type. Entityframework reads this table and manages changes on database tables and their columns. 
+
+Migration editor convert __MigrationHistory table datas to readable C# codes and allows to update.
+
+Why do I need Migration Editor?
+
+If your migration doesn’t work properly, you can review previous migrations and update your code and clean errors in migrations.
+
+**INTERFACE AND EXAMPLE**
+![enter image description here](https://raw.githubusercontent.com/fatihgurdal/EntityFrameworkMigrationEditor/master/EntityFrameworkMigrationEditor.WinForm/img/preview.gif)
+
 
 ## **TÜRKÇE**
 
@@ -14,6 +27,3 @@ Migration Editor __MigrationHistory tablosundaki varbinary(MAX) tipindeki yani C
 
 **ARAYÜZ VE ÖRNEK KULLANIM**
 ![enter image description here](https://raw.githubusercontent.com/fatihgurdal/EntityFrameworkMigrationEditor/master/EntityFrameworkMigrationEditor.WinForm/img/preview.gif)
-
-## ENGLISH
-
