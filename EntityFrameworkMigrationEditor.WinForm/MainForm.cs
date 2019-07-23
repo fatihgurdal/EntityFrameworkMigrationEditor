@@ -73,7 +73,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
             if (cbMigrations.SelectedItem != null)
             {
                 var set = (Setting)cbMigrations.SelectedItem;
-                var migConnection = new MigrationConnection(set.ConnectionString, set.MigrationTableName);
+                var migConnection = new MigrationConnection(set.ConnectionString, set.MigrationTableName, set.ServerType);
                 var migration = migConnection.GetMigrations(set);
                 lbMigrations.DataSource = migration;
             }

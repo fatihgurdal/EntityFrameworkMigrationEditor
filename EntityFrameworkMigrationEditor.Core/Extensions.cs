@@ -19,7 +19,7 @@ namespace EntityFrameworkMigrationEditor.Core
         /// <typeparam name="T">Generic object</typeparam>
         /// <param name="table">DataTable</param>
         /// <returns>List with generic objects</returns>
-        internal static List<T> DataTableToList<T>(this DataTable table) where T : class, new()
+        internal static List<T> DataTableToList<T>(this DataTable table, Dictionary<string, string> columnNames) where T : class, new()
         {
             List<T> list = new List<T>();
 
@@ -31,8 +31,12 @@ namespace EntityFrameworkMigrationEditor.Core
                 {
                     try
                     {
-                        PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
-                        propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                        if (columnNames.ContainsKey(prop.Name))
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+                            propertyInfo.SetValue(obj, Convert.ChangeType(row[columnNames[prop.Name]], propertyInfo.PropertyType), null);
+                        }
+                       
                     }
                     catch
                     {

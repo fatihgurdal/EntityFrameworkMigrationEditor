@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,8 +20,12 @@ namespace EntityFrameworkMigrationEditor.Core
         /// SQL Database connection string
         /// </summary>
         public string ConnectionString { get; set; }
+        /// <summary>
+        /// Bağlanacağı SQL Server type SQL Server or Oracle
+        /// </summary>
+        public ServerType ServerType { get; set; }
 
-        public MigrationConnection(string connectionString) : this(connectionString, "__MigrationHistory")
+        public MigrationConnection(string connectionString) : this(connectionString, "__MigrationHistory", ServerType.SQLServer)
         {
         }
         public bool TestConnection(out string resultError)
@@ -28,15 +33,35 @@ namespace EntityFrameworkMigrationEditor.Core
             resultError = "";
             try
             {
-                using (var connection = new SqlConnection(ConnectionString))
+                if (this.ServerType == ServerType.SQLServer)
                 {
-                    connection.Open();
-                    var command = new SqlCommand($"SELECT COUNT(*) FROM {MigrationTableName}", connection);
-                    var reader = command.ExecuteReader();
-                    var tb = new DataTable();
-                    tb.Load(reader);
-                    connection.Close();
-                    return true;
+                    using (var connection = new SqlConnection(ConnectionString))
+                    {
+                        connection.Open();
+                        var command = new SqlCommand($"SELECT COUNT(*) FROM {MigrationTableName}", connection);
+                        var reader = command.ExecuteReader();
+                        var tb = new DataTable();
+                        tb.Load(reader);
+                        connection.Close();
+                        return true;
+                    }
+                }
+                else if (this.ServerType == ServerType.Oracle)
+                {
+                    using (var connection = new OracleConnection(ConnectionString))
+                    {
+                        connection.Open();
+                        var command = new OracleCommand($"SELECT COUNT(*) FROM {MigrationTableName}", connection);
+                        var reader = command.ExecuteReader();
+                        var tb = new DataTable();
+                        tb.Load(reader);
+                        connection.Close();
+                        return true;
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException("Can you development this SQL Server type?");
                 }
             }
             catch (Exception ex)
@@ -45,10 +70,11 @@ namespace EntityFrameworkMigrationEditor.Core
                 return false;
             }
         }
-        public MigrationConnection(string connectionString, string migrationTableName)
+        public MigrationConnection(string connectionString, string migrationTableName, ServerType serverType)
         {
             this.ConnectionString = connectionString;
             this.MigrationTableName = migrationTableName;
+            this.ServerType = serverType;
         }
         #region - GetMigrations 
         public List<MigrationLightTable> GetMigrations()
@@ -97,35 +123,82 @@ namespace EntityFrameworkMigrationEditor.Core
         }
         public void UpdateMigration(MigrationLightTable migrationLightTable, MigrationSetting setting)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            if (this.ServerType == ServerType.SQLServer)
             {
-                var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=@contexKey , {setting.ProductVersionName}=@productName WHERE {setting.MigrationIdName}=@migrationId";
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=@contexKey , {setting.ProductVersionName}=@productName WHERE {setting.MigrationIdName}=@migrationId";
 
-                var command = new SqlCommand { Connection = connection, CommandType = CommandType.Text };
-                command.CommandText = sqlToExecute;
+                    var command = new SqlCommand { Connection = connection, CommandType = CommandType.Text };
+                    command.CommandText = sqlToExecute;
 
 
-                command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationLightTable.MigrationId;
-                command.Parameters.Add("@contexKey", SqlDbType.NVarChar).Value = migrationLightTable.ContextKey;
-                command.Parameters.Add("@productName", SqlDbType.NVarChar).Value = migrationLightTable.ProductVersion;
-                connection.Open();
-                command.ExecuteNonQuery();
-                connection.Close();
+                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationLightTable.MigrationId;
+                    command.Parameters.Add("@contexKey", SqlDbType.NVarChar).Value = migrationLightTable.ContextKey;
+                    command.Parameters.Add("@productName", SqlDbType.NVarChar).Value = migrationLightTable.ProductVersion;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            else if (this.ServerType == ServerType.Oracle)
+            {
+                using (var connection = new OracleConnection(ConnectionString))
+                {
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=@contexKey , {setting.ProductVersionName}=@productName WHERE {setting.MigrationIdName}=@migrationId";
+
+                    var command = new OracleCommand { Connection = connection, CommandType = CommandType.Text };
+                    command.CommandText = sqlToExecute;
+
+
+                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationLightTable.MigrationId;
+                    command.Parameters.Add("@contexKey", SqlDbType.NVarChar).Value = migrationLightTable.ContextKey;
+                    command.Parameters.Add("@productName", SqlDbType.NVarChar).Value = migrationLightTable.ProductVersion;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("Can you development this New SQL Server type?");
             }
         }
         public void UpdateMigration(string migrationId, XDocument xDocument, MigrationSetting setting)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            if (this.ServerType == ServerType.SQLServer)
             {
-                var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ModelName}=@data WHERE {setting.MigrationIdName}=@migrationId";
-                var command = new SqlCommand { Connection = connection, CommandType = CommandType.Text };
-                command.CommandText = sqlToExecute;
-                var modelBytes = xDocument.Compress();
-                command.Parameters.Add("@data", SqlDbType.VarBinary, modelBytes.Length).Value = modelBytes;
-                command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationId;
-                connection.Open();
-                command.ExecuteNonQuery();
-                connection.Close();
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ModelName}=@data WHERE {setting.MigrationIdName}=@migrationId";
+                    var command = new SqlCommand { Connection = connection, CommandType = CommandType.Text };
+                    command.CommandText = sqlToExecute;
+                    var modelBytes = xDocument.Compress();
+                    command.Parameters.Add("@data", SqlDbType.VarBinary, modelBytes.Length).Value = modelBytes;
+                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationId;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            else if (this.ServerType == ServerType.Oracle)
+            {
+                using (var connection = new OracleConnection(ConnectionString))
+                {
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ModelName}=@data WHERE {setting.MigrationIdName}=@migrationId";
+                    var command = new OracleCommand { Connection = connection, CommandType = CommandType.Text };
+                    command.CommandText = sqlToExecute;
+                    var modelBytes = xDocument.Compress();
+                    command.Parameters.Add("@data", OracleDbType.Blob, modelBytes.Length).Value = modelBytes;
+                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationId;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("Can you development this New SQL Server type?");
             }
         }
         #endregion
@@ -133,34 +206,71 @@ namespace EntityFrameworkMigrationEditor.Core
 
         private List<T> getMigrationTable<T>(string migrationId, bool getData, MigrationSetting setting) where T : class, new()
         {
-
-            using (var connection = new SqlConnection(ConnectionString))
+            if (this.ServerType == ServerType.SQLServer)
             {
-                var sqlToExecute = string.Empty;
-                if (getData)
+                using (var connection = new SqlConnection(ConnectionString))
                 {
-                    sqlToExecute = $"SELECT * FROM {setting.MigrationTableName}";
-                }
-                else
-                {
-                    sqlToExecute = $"SELECT {setting.ContextKeyName},{setting.MigrationIdName},{setting.ProductVersionName} FROM {setting.MigrationTableName}";
-                }
-                if (string.IsNullOrEmpty(migrationId) == false)
-                {
-                    sqlToExecute += $" WHERE {setting.MigrationIdName}='{migrationId}'";
-                }
-                connection.Open();
+                    var sqlToExecute = string.Empty;
+                    if (getData)
+                    {
+                        sqlToExecute = $"SELECT * FROM {setting.MigrationTableName}";
+                    }
+                    else
+                    {
+                        sqlToExecute = $"SELECT {setting.ContextKeyName},{setting.MigrationIdName},{setting.ProductVersionName} FROM {setting.MigrationTableName}";
+                    }
+                    if (string.IsNullOrEmpty(migrationId) == false)
+                    {
+                        sqlToExecute += $" WHERE {setting.MigrationIdName}='{migrationId}'";
+                    }
+                    connection.Open();
 
-                var command = new SqlCommand(sqlToExecute, connection);
-                var reader = command.ExecuteReader();
-                var tb = new DataTable();
-                tb.Load(reader);
+                    var command = new SqlCommand(sqlToExecute, connection);
+                    var reader = command.ExecuteReader();
+                    var tb = new DataTable();
+                    tb.Load(reader);
 
-                var result = tb.DataTableToList<T>();
-                connection.Close();
-                return result;
+                    var result = tb.DataTableToList<T>(setting.GetColumns());
+                    connection.Close();
+                    return result;
+                }
             }
+            else if (this.ServerType == ServerType.Oracle)
+            {
+                using (var connection = new OracleConnection(ConnectionString))
+                {
+                    var sqlToExecute = string.Empty;
+                    if (getData)
+                    {
+                        sqlToExecute = $"SELECT * FROM {setting.MigrationTableName}";
+                    }
+                    else
+                    {
+                        sqlToExecute = $"SELECT {setting.ContextKeyName},{setting.MigrationIdName},{setting.ProductVersionName} FROM {setting.MigrationTableName}";
+                    }
+                    if (string.IsNullOrEmpty(migrationId) == false)
+                    {
+                        sqlToExecute += $" WHERE {setting.MigrationIdName}='{migrationId}'";
+                    }
+                    connection.Open();
+
+                    var command = new OracleCommand(sqlToExecute, connection);
+                    var reader = command.ExecuteReader();
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    var result = tb.DataTableToList<T>(setting.GetColumns());
+                    connection.Close();
+                    return result;
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("Can you development this SQL Server type?");
+            }
+
         }
+
 
         #endregion
     }

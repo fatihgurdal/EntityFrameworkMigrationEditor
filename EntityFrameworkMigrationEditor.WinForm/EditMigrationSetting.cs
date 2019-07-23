@@ -20,6 +20,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
         public EditMigrationSetting(Setting setting, bool isUpdate)
         {
             InitializeComponent();
+            this.cbSQLServerType.DataSource = Enum.GetValues(typeof(ServerType));
             this.tempSetting = setting;
             _isUpdate = isUpdate;
             txtConnectionName.Text = setting.ConnectionName;
@@ -29,6 +30,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
             txtMigrationTable.Text = setting.MigrationTableName;
             txtModel.Text = setting.ModelName;
             txtProductVersion.Text = setting.ProductVersionName;
+            this.cbSQLServerType.SelectedItem = setting.ServerType;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -42,6 +44,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
             tempSetting.MigrationTableName = txtMigrationTable.Text;
             tempSetting.ModelName = txtModel.Text;
             tempSetting.ProductVersionName = txtProductVersion.Text;
+            tempSetting.ServerType = (ServerType)cbSQLServerType.SelectedItem;
             if (this._isUpdate == false)
             {
                 list.Add(tempSetting);
@@ -53,7 +56,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
 
         private void btnConnectionTest_Click(object sender, EventArgs e)
         {
-            var migrationConnection = new MigrationConnection(txtConnectionString.Text, txtMigrationTable.Text);
+            var migrationConnection = new MigrationConnection(txtConnectionString.Text, txtMigrationTable.Text, (ServerType)cbSQLServerType.SelectedItem);
             string error;
             if (migrationConnection.TestConnection(out error))
             {
