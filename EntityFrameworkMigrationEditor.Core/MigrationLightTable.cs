@@ -22,7 +22,7 @@ namespace EntityFrameworkMigrationEditor.Core
         }
         public MigrationTable GetMigrationTable(Setting setting)
         {
-            var migCon = new MigrationConnection(setting.ConnectionString, setting.MigrationTableName);
+            var migCon = new MigrationConnection(setting.ConnectionString, setting.MigrationTableName, setting.ServerType);
             return migCon.GetMigrationWithData(this.MigrationId, setting);
         }
 

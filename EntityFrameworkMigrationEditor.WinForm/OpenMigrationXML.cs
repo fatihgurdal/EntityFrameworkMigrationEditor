@@ -31,7 +31,7 @@ namespace EntityFrameworkMigrationEditor.WinForm
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var migConnection = new MigrationConnection(_setting.ConnectionString, _setting.MigrationTableName);
+            var migConnection = new MigrationConnection(_setting.ConnectionString, _setting.MigrationTableName, _setting.ServerType);
             var document = XDocument.Parse(txtMigrationDataXml.Text);
             migConnection.UpdateMigration(this.MigrationTable.MigrationId, document, _setting);
             migConnection.UpdateMigration(this.MigrationTable, _setting);

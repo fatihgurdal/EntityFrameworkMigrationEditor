@@ -44,6 +44,8 @@
             this.txtConnectionString = new MetroFramework.Controls.MetroTextBox();
             this.btnConnectionTest = new MetroFramework.Controls.MetroButton();
             this.btnSave = new MetroFramework.Controls.MetroButton();
+            this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
+            this.cbSQLServerType = new MetroFramework.Controls.MetroComboBox();
             this.SuspendLayout();
             // 
             // metroLabel1
@@ -283,7 +285,7 @@
             // metroLabel7
             // 
             this.metroLabel7.AutoSize = true;
-            this.metroLabel7.Location = new System.Drawing.Point(23, 238);
+            this.metroLabel7.Location = new System.Drawing.Point(23, 281);
             this.metroLabel7.Name = "metroLabel7";
             this.metroLabel7.Size = new System.Drawing.Size(113, 19);
             this.metroLabel7.TabIndex = 12;
@@ -304,7 +306,7 @@
             this.txtConnectionString.CustomButton.UseSelectable = true;
             this.txtConnectionString.CustomButton.Visible = false;
             this.txtConnectionString.Lines = new string[0];
-            this.txtConnectionString.Location = new System.Drawing.Point(23, 260);
+            this.txtConnectionString.Location = new System.Drawing.Point(23, 303);
             this.txtConnectionString.MaxLength = 32767;
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
@@ -314,7 +316,7 @@
             this.txtConnectionString.SelectionLength = 0;
             this.txtConnectionString.SelectionStart = 0;
             this.txtConnectionString.ShortcutsEnabled = true;
-            this.txtConnectionString.Size = new System.Drawing.Size(425, 61);
+            this.txtConnectionString.Size = new System.Drawing.Size(425, 100);
             this.txtConnectionString.TabIndex = 13;
             this.txtConnectionString.UseSelectable = true;
             this.txtConnectionString.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -322,9 +324,9 @@
             // 
             // btnConnectionTest
             // 
-            this.btnConnectionTest.Location = new System.Drawing.Point(142, 238);
+            this.btnConnectionTest.Location = new System.Drawing.Point(142, 281);
             this.btnConnectionTest.Name = "btnConnectionTest";
-            this.btnConnectionTest.Size = new System.Drawing.Size(45, 19);
+            this.btnConnectionTest.Size = new System.Drawing.Size(66, 19);
             this.btnConnectionTest.TabIndex = 14;
             this.btnConnectionTest.Text = "Test";
             this.btnConnectionTest.UseSelectable = true;
@@ -340,11 +342,32 @@
             this.btnSave.UseSelectable = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // metroLabel8
+            // 
+            this.metroLabel8.AutoSize = true;
+            this.metroLabel8.Location = new System.Drawing.Point(23, 244);
+            this.metroLabel8.Name = "metroLabel8";
+            this.metroLabel8.Size = new System.Drawing.Size(140, 19);
+            this.metroLabel8.TabIndex = 16;
+            this.metroLabel8.Text = "Migration Table Name";
+            // 
+            // cbSQLServerType
+            // 
+            this.cbSQLServerType.FormattingEnabled = true;
+            this.cbSQLServerType.ItemHeight = 23;
+            this.cbSQLServerType.Location = new System.Drawing.Point(188, 234);
+            this.cbSQLServerType.Name = "cbSQLServerType";
+            this.cbSQLServerType.Size = new System.Drawing.Size(260, 29);
+            this.cbSQLServerType.TabIndex = 17;
+            this.cbSQLServerType.UseSelectable = true;
+            // 
             // EditMigrationSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 344);
+            this.ClientSize = new System.Drawing.Size(468, 412);
+            this.Controls.Add(this.cbSQLServerType);
+            this.Controls.Add(this.metroLabel8);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnConnectionTest);
             this.Controls.Add(this.txtConnectionString);
@@ -387,5 +410,7 @@
         private MetroFramework.Controls.MetroTextBox txtConnectionString;
         private MetroFramework.Controls.MetroButton btnConnectionTest;
         private MetroFramework.Controls.MetroButton btnSave;
+        private MetroFramework.Controls.MetroLabel metroLabel8;
+        private MetroFramework.Controls.MetroComboBox cbSQLServerType;
     }
 }

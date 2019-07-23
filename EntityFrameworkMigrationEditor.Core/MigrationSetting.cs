@@ -13,6 +13,7 @@ namespace EntityFrameworkMigrationEditor.Core
         public string ProductVersionName { get; set; }
         public string ModelName { get; set; }
         public string MigrationTableName { get; set; }
+        public ServerType ServerType { get; set; }
         public MigrationSetting()
         {
 
@@ -26,9 +27,26 @@ namespace EntityFrameworkMigrationEditor.Core
         {
             this.MigrationIdName = "MigrationId";
             this.ContextKeyName = "ContextKey";
-            this.ProductVersionName = "Model";
-            this.ModelName = "ProductVersion";
+            this.ProductVersionName = "ProductVersion";
+            this.ModelName = "Model";
             this.MigrationTableName = "__MigrationHistory";
+            this.ServerType = ServerType.SQLServer;
         }
+        public Dictionary<string,string> GetColumns()
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("MigrationId", this.MigrationIdName);
+            dic.Add("ContextKey", this.ContextKeyName);
+            dic.Add("ProductVersion", ProductVersionName);
+            dic.Add("Model", ModelName);
+            dic.Add("__MigrationHistory", MigrationTableName);
+            return dic;
+        }
+    }
+    public enum ServerType : byte
+    {
+        SQLServer = 0,
+        Oracle = 1,
+        New = 255
     }
 }
