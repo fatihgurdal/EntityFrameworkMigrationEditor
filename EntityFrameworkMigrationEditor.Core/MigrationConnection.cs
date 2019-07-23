@@ -145,15 +145,15 @@ namespace EntityFrameworkMigrationEditor.Core
             {
                 using (var connection = new OracleConnection(ConnectionString))
                 {
-                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=@contexKey , {setting.ProductVersionName}=@productName WHERE {setting.MigrationIdName}=@migrationId";
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ContextKeyName}=:contexKey , {setting.ProductVersionName}=:productName WHERE {setting.MigrationIdName}=:migrationId";
 
                     var command = new OracleCommand { Connection = connection, CommandType = CommandType.Text };
                     command.CommandText = sqlToExecute;
 
 
-                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationLightTable.MigrationId;
-                    command.Parameters.Add("@contexKey", SqlDbType.NVarChar).Value = migrationLightTable.ContextKey;
-                    command.Parameters.Add("@productName", SqlDbType.NVarChar).Value = migrationLightTable.ProductVersion;
+                    command.Parameters.Add("migrationId", OracleDbType.NVarchar2).Value = migrationLightTable.MigrationId;
+                    command.Parameters.Add("contexKey", OracleDbType.NVarchar2).Value = migrationLightTable.ContextKey;
+                    command.Parameters.Add("productName", OracleDbType.NVarchar2).Value = migrationLightTable.ProductVersion;
                     connection.Open();
                     command.ExecuteNonQuery();
                     connection.Close();
@@ -185,12 +185,12 @@ namespace EntityFrameworkMigrationEditor.Core
             {
                 using (var connection = new OracleConnection(ConnectionString))
                 {
-                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ModelName}=@data WHERE {setting.MigrationIdName}=@migrationId";
+                    var sqlToExecute = $"UPDATE {setting.MigrationTableName} SET {setting.ModelName}=:data WHERE {setting.MigrationIdName}=:migrationId";
                     var command = new OracleCommand { Connection = connection, CommandType = CommandType.Text };
                     command.CommandText = sqlToExecute;
                     var modelBytes = xDocument.Compress();
-                    command.Parameters.Add("@data", OracleDbType.Blob, modelBytes.Length).Value = modelBytes;
-                    command.Parameters.Add("@migrationId", SqlDbType.NVarChar).Value = migrationId;
+                    command.Parameters.Add("data", OracleDbType.Blob, modelBytes.Length).Value = modelBytes;
+                    command.Parameters.Add("migrationId", OracleDbType.NVarchar2).Value = migrationId;
                     connection.Open();
                     command.ExecuteNonQuery();
                     connection.Close();
